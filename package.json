@@ -1,0 +1,28 @@
+{
+  "name": "url-shortener-microservice-free-code-camp",
+  "version": "1.0.0",
+  "description": "A microservice that links the API to external websites via a numbered subdirectory of the API.",
+  "main": "myApp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node myApp.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "url-shortener-microservice-free-code-camp"
+  },
+  "keywords": [
+    "url",
+    "shortener",
+    "hyperlink"
+  ],
+  "author": "John Albright",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongodb": "^4.1.1",
+    "mongoose": "^6.0.2",
+    "normalize-url": "^4.5.1"
+  }
+}

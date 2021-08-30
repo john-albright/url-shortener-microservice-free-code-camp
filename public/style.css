@@ -1,0 +1,16 @@
+body {
+    color: yellow;
+    background-color: darkgreen;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: 10px 20px;
+}
+
+a {
+    text-decoration: none;
+    color: aquamarine;
+}
+
+a:hover, a:active {
+    color: blue;
+    transition: color 0.2s ease-in;
+}
