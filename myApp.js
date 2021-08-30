@@ -33,7 +33,17 @@ app.use(express.urlencoded( {extended: true} ));
 app.route('/').get((req, res) => {
     res.sendFile(__dirname + "/views/index.html");
 
-    /*console.log(normalizeUrl('http://www.wikipedia.org', { forceHttps: true }));
+    /*dns.resolve('//mongoosejs.com', (err, address, family) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log(address, family);
+    });
+
+    console.log(normalizeUrl('htt://www.wikipedia.org', {stripProtocol: true}));
+
+    console.log(normalizeUrl('http://www.wikipedia.org', { forceHttps: true }));
 
     Url.findOneAndUpdate({ number: 1 }, { url: normalizeUrl('duckduckgo.com', { forceHttps: true })}, (error, data) => {
         if (error) return console.log(error);
@@ -49,18 +59,21 @@ app.route('/').get((req, res) => {
 
     // Get the "url" text from the form 
     var urlEntered = req.body.url;
-    console.log(urlEntered);
 
-    dns.lookup(urlEntered, (error, address, family) => {
+    // Remove the http or https protocol of the url entered
+    var urlStripped = normalizeUrl(urlEntered, { stripProtocol: true })
+
+    dns.resolve(urlStripped, (error, value) => {
         if (error) {
             res.json({ error: "invalid url" });
-            console.log(error, address, family);
+            console.log(error, value);
+            console.log(error.code);
             return;
         }
         
         // Normalize the URL forcing the link to being with https 
         // By default, the stripWWW option is set to true
-        urlNormalized = normalizeUrl(urlEntered, { forceHttps: true });
+        var urlNormalized = normalizeUrl(urlStripped, { forceHttps: true });
 
         // Attempt to find the normalized url in the Mongo DB
         Url.findOne({ url: urlNormalized }, (error, data) => {
