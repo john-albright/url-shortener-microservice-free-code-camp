@@ -46,5 +46,26 @@
         <code>
             {"_id":"612bf3e8c0dfe23586736daa","number":1,"url":"duckduckgo.com","date":"2021-08-29T20:54:00.084Z","__v":0}
         </code>
+        <h2>Links Stored in Database</h2>
+        <p>
+            This is a dynamically generated list and will change when a website is added to the form at 
+            the top of the page.
+        </p>
+        <table>
+        <thead>
+            <th>Full URL</th>
+            <th>Short URL</th>
+            <th>Date Added</th>
+        </thead>
+            <tbody>
+                <% database.forEach(record => { %>
+                    <tr>
+                        <td><%= record.url %></td>
+                        <td><a href="/api/shorturl/<%= record.number %>"><%= record.number %></a></td>
+                        <td><%= record.date.toUTCString() %></td>
+                    </tr>
+                <% }) %> 
+            </tbody>
+        </table>
     </body>
 </html>

@@ -1,16 +1,97 @@
 body {
-    color: yellow;
-    background-color: darkgreen;
+    color: rgb(255, 255, 130);
+    background-color: rgb(0, 70, 40);
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    padding: 10px 20px;
+    padding: 10px 50px;
+    line-height: 1.5em;
+}
+
+h1 {
+    text-align: center;
+}
+
+h1, h2 {
+    color: rgb(0, 200, 100);
+}
+
+form { 
+    border: 3px solid rgb(0, 100, 50);
+    border-radius: 10px;
+
+    padding: 10px 50px;
+    width: 50%;
+    height: 100px;
+    margin: auto;
+
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+input {
+    height: 30px;
+    border-radius: 5px;
+    border: 2px solid lightgreen;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.5em;
+}
+
+button {
+    background-color:rgb(0, 100, 100);
+    color: white;
+    transition: background-color 0.3s ease-out;
+
+    border: 1px solid rgb(0, 50, 100);
+    border-radius: 5px;
+
+    width: 30%;
+    height: 40px;
+
+    margin: 10px auto 0px auto;
+
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.3em;
+}
+
+button:hover {
+    background-color: rgb(0, 50, 100);
+    transition: background-color 0.3s ease-in;
+    cursor: pointer;
 }
 
 a {
     text-decoration: none;
-    color: aquamarine;
+    color: rgb(100, 200, 255);
+    transition: color 0.3s ease-in;
 }
 
 a:hover, a:active {
-    color: blue;
+    color: rgb(50, 130, 200);
     transition: color 0.2s ease-in;
+}
+
+code {
+    color: rgb(255, 255, 220);
+}
+
+table {
+    width: 80%;
+    margin: auto;
+}
+
+td {
+    text-align: center;
+}
+
+table, th, td {
+    border: 1px solid rgb(0, 50, 100);
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+th {
+    background-color: rgb(0, 100, 100);
 }
