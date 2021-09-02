@@ -9,7 +9,6 @@ require('dotenv').config();
 // Enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // So that API is remotely testable by FCC 
 var cors = require('cors');
-const { isIPv4 } = require('net');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // Connect to my Mongoose DB Atlas account
@@ -20,10 +19,11 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const { Schema } = mongoose;
 
+// Create schema
 const urlSchema = new Schema({
     number: {type: Number, required: true},
     url: {type: String, required: true},
-    date: {type: Date, required: true}
+    date: {type: Date, default: Date.now}
 });
 
 let Url = mongoose.model('Url', urlSchema);
@@ -51,45 +51,15 @@ app.route('/').get((req, res) => {
         //console.log(database);
         res.render('index', { database: database });
     });
-    
-
-    /*
-    dns.resolve('ex.wikipedia.org', 'A', (error, value) => {
-        if (error) console.log(error);
-        console.log('es.wikipedia.org -- A --', value);
-    });
-    
-    dns.resolve('www.google.com', 'AAAA', (error, value) => {
-        if (error) console.log(error);
-        console.log('www.google.com -- AAAA --', value);
-    });
-
-    dns.resolve('ok.com', 'A', (error, value) => {
-        if (error) console.log(error);
-        console.log('ok.com -- A --', value);
-    });
-    dns.resolve('ok.com', 'AAAA', (error, value) => {
-        if (error) console.log(error);
-        console.log('ok.com -- AAAA --', value);
-    });
-
-    dns.resolve('http://www.google.com', (error, value) => {
-        if (error) console.log(error);
-        console.log('http://www.google.com', value);
-    });
-
-    
-    dns.resolve('ok.com', 'AAAA', (error, value) => {
-       if (error) console.log(error);
-       console.log(value); 
-    });
-    */
 });
 
 app.get('/api/shorturl/:number', (req, res) => {
 
     // Get the number parameter from the subdirectory
-    var urlID = new Number(req.params.number);
+    // There's no need to convert this to a Number
+    // JS will convert the types automatically when comparing them
+    // In JS, '1' == 1 evaluates to true whilte '1' === 1 evaluates to false
+    var urlID = req.params.number;
 
     // Search for the url 
     Url.findOne({ number: urlID }, (error, data) => {
@@ -99,13 +69,7 @@ app.get('/api/shorturl/:number', (req, res) => {
 
 });
 
-app.route('/api/shorturl/').get((req, res) => {
-    Url.find({}, (error, data) => {
-        if (error) return console.log(error);
-        console.log(data);
-        res.json(data);
-    });
-}).post((req, res) => {
+app.post('/api/shorturl', (req, res) => {
 
     // Get the "url" text from the form 
     var urlEntered = req.body.url;
@@ -134,7 +98,7 @@ app.route('/api/shorturl/').get((req, res) => {
 
     dns.resolve(urlStripped, resourceRecordType, (error, value) => {
         if (error) {
-            res.json({ error: "Invalid URL" });
+            res.json({ error: "Invalid Hostname" });
             console.log(error.code);
             return;
         }
@@ -162,8 +126,7 @@ app.route('/api/shorturl/').get((req, res) => {
                     // Create new Url object for MongoDB
                     const newUrl = new Url({
                         number: currentNumber,
-                        url: urlEntered,
-                        date: new Date()
+                        url: urlEntered
                     });
             
                     // Save the new Url object in the database
@@ -183,6 +146,14 @@ app.route('/api/shorturl/').get((req, res) => {
         });
      });
 });
+
+app.get('/api/shorturls', (req, res) => {
+    Url.find({}, (error, data) => {
+        if (error) return console.log(error);
+        console.log(data);
+        res.json(data);
+    });
+})
 
 // Get the port of the server or assign one of 3000
 var port = process.env.PORT || 3000;
