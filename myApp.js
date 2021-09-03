@@ -63,8 +63,16 @@ app.get('/api/shorturl/:number', (req, res) => {
 
     // Search for the url 
     Url.findOne({ number: urlID }, (error, data) => {
-        if (error) return console.log(error);
-        res.redirect(data.url);
+        if (error) {
+            res.status(500).send(error);
+            return console.log(error);
+        }
+        if (data) {
+            res.redirect(data.url);
+        }
+        else {
+            res.json({ "error" : "No short URL found for the given input" });
+        }
     });
 
 });
@@ -93,10 +101,14 @@ app.post('/api/shorturl', (req, res) => {
         return;
     }
 
+    // There's no need to normalize the URL
     // Remove the http or https protocol of the url entered
-    var urlStripped = normalizeUrl(urlEntered, { stripProtocol: true });
+    // const urlStripped = normalizeUrl(urlEntered, { stripProtocol: true });
 
-    dns.resolve(urlStripped, resourceRecordType, (error, value) => {
+    // Parse the url entered 
+    const urlParsed = new URL(urlEntered);
+
+    dns.resolve(urlParsed.protocol ? urlParsed.host : urlParsed.pathname, resourceRecordType, (error, value) => {
         if (error) {
             res.json({ error: "Invalid Hostname" });
             console.log(error.code);
@@ -108,17 +120,23 @@ app.post('/api/shorturl', (req, res) => {
         // By default, the stripWWW option is set to true
         // var urlNormalized = normalizeUrl(urlStripped, { forceHttp: true });
 
+        console.log(value);
+
         // Attempt to find the normalized url in the Mongo DB
         Url.findOne({ url: urlEntered }, (error, data) => {
-            if (error) return console.log(error);
-
+            if (error) {
+                res.status(500).send(error);
+                return console.log(error);
+            }
             var results = data; // results will be null if no matches are found 
 
             if (!results) { // Add a Url object if no matches are found
                 // Get the count of entries in the database
                 Url.count({}, (error, data) => {
-                    if (error) return console.log(error);
-                    
+                    if (error) {
+                        res.status(500).send(error);
+                        return console.log(error);
+                    }
                     // Find the next id number available
                     var count = data;
                     var currentNumber = count + 1;
