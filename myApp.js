@@ -83,6 +83,8 @@ app.post('/api/shorturl', (req, res) => {
     // Get the "url" text from the form 
     var urlEntered = req.body.url;
 
+    console.log(urlEntered);
+
     // Check if the url is blank
     if (!urlEntered) {
         res.json({ error: "Invalid URL" });
@@ -107,13 +109,22 @@ app.post('/api/shorturl', (req, res) => {
     // There's no need to normalize the URL
     // Remove the http or https protocol of the url entered
     // const urlStripped = normalizeUrl(urlEntered, { stripProtocol: true });
+    
+    var urlParsed;
 
     // Parse the url entered 
-    const urlParsed = new URL(urlEntered);
-
+    try {
+        urlParsed = new URL(urlEntered);
+    } catch (error) {
+        res.json({ error: "Invalid URL" });
+        console.log(error);
+        return;
+    }
+    
+    
     dns.resolve(urlParsed.protocol ? urlParsed.host : urlParsed.pathname, (error, value) => {
         if (error) {
-            res.json({ error: "Invalid Hostname" });
+            res.json({ error: "Invalid URL" });
             console.log(error.code);
             return;
         }
@@ -140,6 +151,7 @@ app.post('/api/shorturl', (req, res) => {
                         res.status(500).send(error);
                         return console.log(error);
                     }
+                    
                     // Find the next id number available
                     var count = data;
                     var currentNumber = count + 1;
