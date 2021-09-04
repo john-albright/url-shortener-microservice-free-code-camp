@@ -51,6 +51,7 @@ app.route('/').get((req, res) => {
         //console.log(database);
         res.render('index', { database: database });
     });
+
 });
 
 app.get('/api/shorturl/:number', (req, res) => {
@@ -88,18 +89,20 @@ app.post('/api/shorturl', (req, res) => {
         return;
     }
 
-    // Initialize variable 
-    var resourceRecordType = '';
+    /*
+        Is there a connection between the rrtype A and HTTP and the rrtype AAAA and HTTPS?
 
-    // Get the resource record type depending on the protocol used
-    if (urlEntered.match(/^http:\/\//)) {
-        resourceRecordType = 'A';
-    } else if (urlEntered.match(/^https:\/\//)) {
-        resourceRecordType = 'AAAA';
-    } else {
-        res.json({ error: "Invalid URL" });
-        return;
-    }
+        var resourceRecordType = '';
+
+        if (urlEntered.match(/^http:\/\//)) {
+            resourceRecordType = 'A';
+        } else if (urlEntered.match(/^https:\/\//)) {
+            resourceRecordType = 'AAAA';
+        } else {
+            res.json({ error: "Invalid URL" });
+            return;
+        }
+    */
 
     // There's no need to normalize the URL
     // Remove the http or https protocol of the url entered
@@ -108,7 +111,7 @@ app.post('/api/shorturl', (req, res) => {
     // Parse the url entered 
     const urlParsed = new URL(urlEntered);
 
-    dns.resolve(urlParsed.protocol ? urlParsed.host : urlParsed.pathname, resourceRecordType, (error, value) => {
+    dns.resolve(urlParsed.protocol ? urlParsed.host : urlParsed.pathname, (error, value) => {
         if (error) {
             res.json({ error: "Invalid Hostname" });
             console.log(error.code);
