@@ -91,20 +91,11 @@ app.post('/api/shorturl', (req, res) => {
         return;
     }
 
-    /*
-        Is there a connection between the rrtype A and HTTP and the rrtype AAAA and HTTPS?
-
-        var resourceRecordType = '';
-
-        if (urlEntered.match(/^http:\/\//)) {
-            resourceRecordType = 'A';
-        } else if (urlEntered.match(/^https:\/\//)) {
-            resourceRecordType = 'AAAA';
-        } else {
-            res.json({ error: "Invalid URL" });
-            return;
-        }
-    */
+    // Make sure the website has a protocol of http or https
+    if (!urlEntered.match(/^http[s]*:\/\//)) {
+        res.json({ error: "Invalid URL" });
+        return;
+    }
 
     // There's no need to normalize the URL
     // Remove the http or https protocol of the url entered
