@@ -1,8 +1,9 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var dns = require('dns');
+// var normalizeUrl = require('normalize-url');
+
 var app = express();
-var normalizeUrl = require('normalize-url');
 
 require('dotenv').config();
 
